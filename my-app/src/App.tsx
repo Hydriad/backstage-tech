@@ -55,7 +55,7 @@ const Card = (props:CalculationResponse) => (
     <KeyValuePair title="Datetime" value={props.datetime.toLocaleString()} />
     <KeyValuePair title="Last datetime" value={props.last_datetime.toLocaleString()} />
     <KeyValuePair title="Number entered" value={props.number} />
-    <KeyValuePair title="Solution value" value={props.value} />
+    <KeyValuePair title="Solution value" value={props.value.toLocaleString()} />
     <KeyValuePair title="Occurrences" value={props.occurrences} />
   </div>
 );
