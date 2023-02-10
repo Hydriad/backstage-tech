@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import { getSquareOfSum, getSumOfSquares } from './mathyUtils';
 
+
 interface CalculationResponse {
   /** current datetime of request */
   datetime: Date;
@@ -15,23 +16,55 @@ interface CalculationResponse {
   occurrences: number;
 }
 
+interface SquaredSumDB {
+  [key: number]: CalculationResponse
+}
+const mockDB:SquaredSumDB = {};
+
+
 const calculateSquareSumDiff = async (n: number):Promise<CalculationResponse> => {
   const diff = getSquareOfSum(n) - getSumOfSquares(n);
+  const response = {
+    datetime: new Date(),
+    last_datetime: mockDB[n] ? mockDB[n].datetime : new Date(),
+    value: diff,
+    number: n,
+    occurrences: mockDB[n] ? mockDB[n].occurrences + 1 : 1
+  };
+
+  mockDB[n] = response;
 
   return new Promise<CalculationResponse>((resolve) => {
-    resolve({
-      datetime: new Date(),
-      last_datetime: new Date(),
-      value: diff,
-      number: n,
-      occurrences: 0
-    });
+    resolve(response);
   });
 }
+
+interface KeyValuePairProps {
+  title: string;
+  value: string | number;
+}
+const KeyValuePair = (props:KeyValuePairProps) => (
+  <div className="keyValuePair">
+    <p className="key">{props.title + ":"}</p>
+    <p className="value">{props.value}</p>
+  </div>
+);
+
+const Card = (props:CalculationResponse) => (
+  <div className="box card">
+    <KeyValuePair title="Datetime" value={props.datetime.toLocaleString()} />
+    <KeyValuePair title="Last datetime" value={props.last_datetime.toLocaleString()} />
+    <KeyValuePair title="Number entered" value={props.number} />
+    <KeyValuePair title="Solution value" value={props.value} />
+    <KeyValuePair title="Occurrences" value={props.occurrences} />
+  </div>
+);
+
 
 function App() {
   const [input, setInput] = useState<string | number>("");
   const [result, setResult] =  useState<number | undefined>(undefined);
+  const [apiResponses, setApiResponses] = useState<CalculationResponse[]>([]);
 
   const inputIsValid = typeof input !== "string" && input > 0 && input <= 100;
 
@@ -49,6 +82,7 @@ function App() {
   const calculateDiff = async (num: number) => {
     const response = await calculateSquareSumDiff(num);
     setResult(response.value);
+    setApiResponses([response, ...apiResponses]);
   };
 
   return (
@@ -71,13 +105,26 @@ function App() {
 
         <section className="result">
           {result !== undefined &&
-            <>
-              <h1>Result</h1>
-              <h3>{result.toLocaleString()}</h3>
-            </>
+            <h1>Result: {result.toLocaleString()}</h1>
           }
         </section>
       </div>
+
+      <ul className="cards-list">
+      {apiResponses.map((response:CalculationResponse, i) => {
+        return (
+          <li key={`card-${i}`}>
+            <Card 
+              datetime={response.datetime}
+              last_datetime={response.last_datetime}
+              number={response.number}
+              value={response.value}
+              occurrences={response.occurrences}
+            />
+          </li>
+        )
+      })}
+      </ul>
     </div>
   );
 }
