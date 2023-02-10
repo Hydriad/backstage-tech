@@ -1,5 +1,4 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 import { getSqareOfSum, getSumOfSquares } from './mathyUtils';
 
@@ -17,7 +16,9 @@ interface CalculationResponse {
 }
 
 const calculateSquareSumDiff = async (n: number):Promise<CalculationResponse> => {
-  const diff = getSumOfSquares(n) - getSqareOfSum(n);
+  const diff = getSqareOfSum(n) - getSumOfSquares(n);
+
+  console.log("diff", diff);
 
   return new Promise<CalculationResponse>((resolve) => {
     resolve({
@@ -31,22 +32,26 @@ const calculateSquareSumDiff = async (n: number):Promise<CalculationResponse> =>
 }
 
 function App() {
+  const [ input, setInput ] = useState<string | number>("");
+  const inputIsValid = typeof input !== "string" && input <= 100;
+
+  const handleInputChange = (val: string) => {
+    const num = parseInt(val, 10);
+
+    // if (isNaN(num)) return;
+    setInput(num);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <h1>
+        Square Sum Diff
+      </h1>
+
+      <input type="number" value={input} onChange={(e) => handleInputChange(e.target.value)} max={100} />
+      <button disabled={!inputIsValid} onClick={() => inputIsValid && calculateSquareSumDiff(input)}>
+        Calculate
+      </button>
     </div>
   );
 }
