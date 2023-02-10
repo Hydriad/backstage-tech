@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import { getSqareOfSum, getSumOfSquares } from './mathyUtils';
+import { getSquareOfSum, getSumOfSquares } from './mathyUtils';
 
 interface CalculationResponse {
   /** current datetime of request */
@@ -16,7 +16,7 @@ interface CalculationResponse {
 }
 
 const calculateSquareSumDiff = async (n: number):Promise<CalculationResponse> => {
-  const diff = getSqareOfSum(n) - getSumOfSquares(n);
+  const diff = getSquareOfSum(n) - getSumOfSquares(n);
 
   console.log("diff", diff);
 
