@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import { getSquareOfSum, getSumOfSquares } from './mathyUtils';
 
 interface CalculationResponse {
   /** current datetime of request */
   datetime: Date;
-  /** datetime of previos request */
+  /** datetime of previous request */
   last_datetime: Date;
   /** solution */
   value: number;
@@ -32,26 +32,50 @@ const calculateSquareSumDiff = async (n: number):Promise<CalculationResponse> =>
 }
 
 function App() {
-  const [ input, setInput ] = useState<string | number>("");
-  const inputIsValid = typeof input !== "string" && input <= 100;
+  const [input, setInput] = useState<string | number>("");
+  const [result, setResult] =  useState<number | undefined>(undefined);
+
+  const inputIsValid = typeof input !== "string" && input > 0 && input <= 100;
 
   const handleInputChange = (val: string) => {
-    const num = parseInt(val, 10);
+    // allow user to empty input
+    if (val === "") {
+      return setInput("");
+    }
 
-    // if (isNaN(num)) return;
+    const num = parseInt(val, 10);
     setInput(num);
+    setResult(undefined);
   }
+
+  const calculateDiff = async (num: number) => {
+    const response = await calculateSquareSumDiff(num);
+    setResult(response.value);
+  };
 
   return (
     <div className="app">
-      <h1>
-        Square Sum Diff
-      </h1>
+      <div className="box">
+        <h1>
+          Square Sum Diff
+        </h1>
 
-      <input type="number" value={input} onChange={(e) => handleInputChange(e.target.value)} max={100} />
-      <button disabled={!inputIsValid} onClick={() => inputIsValid && calculateSquareSumDiff(input)}>
-        Calculate
-      </button>
+        <div className="inputs">
+          <input type="number" value={input} onChange={(e) => handleInputChange(e.target.value)} max={100} min={1} />
+          <button disabled={!inputIsValid} onClick={() => inputIsValid && calculateDiff(input)}>
+            CALCULATE
+          </button>
+        </div>
+
+        <section className="result">
+          {result !== undefined &&
+            <>
+              <h2>Result</h2>
+              <h3>{result.toLocaleString()}</h3>
+            </>
+          }
+        </section>
+      </div>
     </div>
   );
 }
