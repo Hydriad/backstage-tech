@@ -66,9 +66,15 @@ button:hover {
 }
 
 button:disabled {
-  filter: brightness(0.8);
+  background-color: #fc467b;
+  filter: brightness(0.85);
+  cursor: not-allowed;
 }
 
 .result {
   margin-top: 2rem;
+}
+
+.error-text {
+  color: #fc467b;
 }

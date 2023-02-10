@@ -1,3 +1,17 @@
+# Notes from Hayley
+
+My understanding was that we're not actually keeping track of the number of times the async function was called, etc, because that's being handled by the mock backend. If I misunderstood, please let me know and we can discuss how I'd approach those things.
+
+## What I'd do with more time
+
+* Switch to SCSS or any other compilable CSS for nesting
+* Do we even need the "Calculate" button? Yes if it's async, but it feels unnecessary at the moment.
+* Cleanup unused files
+* Explain in the UI what "Calculate" is actually doing
+* Use Prettier for code consistency
+
+----------------------------------------------
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

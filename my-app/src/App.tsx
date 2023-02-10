@@ -18,8 +18,6 @@ interface CalculationResponse {
 const calculateSquareSumDiff = async (n: number):Promise<CalculationResponse> => {
   const diff = getSquareOfSum(n) - getSumOfSquares(n);
 
-  console.log("diff", diff);
-
   return new Promise<CalculationResponse>((resolve) => {
     resolve({
       datetime: new Date(),
@@ -67,10 +65,14 @@ function App() {
           </button>
         </div>
 
+        {!inputIsValid && input !== "" &&
+          <p className="error-text">Please enter a value between 1 and 100.</p>
+        }
+
         <section className="result">
           {result !== undefined &&
             <>
-              <h2>Result</h2>
+              <h1>Result</h1>
               <h3>{result.toLocaleString()}</h3>
             </>
           }
